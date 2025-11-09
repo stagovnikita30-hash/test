@@ -6,13 +6,17 @@ const questions = document.querySelectorAll(".question");
 // Музыка
 const bgMusic = document.getElementById("bgMusic");
 const volumeControl = document.getElementById("volumeControl");
+bgMusic.volume = 0.3; // по умолчанию 30%
 
-// Устанавливаем громкость по умолчанию 30%
-bgMusic.volume = 0.3;
+// Включаем музыку после первого клика пользователя
+document.addEventListener("click", () => {
+  if (bgMusic.paused) bgMusic.play();
+}, { once: true });
 
 // Изменение громкости через ползунок
 volumeControl.addEventListener("input", () => {
   bgMusic.volume = volumeControl.value;
+  if (bgMusic.paused) bgMusic.play();
 });
 
 // Загрузка сохранённых ответов
