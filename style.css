@@ -1,21 +1,93 @@
+/* Основные стили */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  background: linear-gradient(135deg, #c3ecf9, #e0b3ff, #ffb6c1);
   padding: 2rem;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 700px;
+  width: 100%;
   background: #fff;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+h1 {
+  text-align: center;
+  color: #6b21a8;
+  margin-bottom: 2rem;
+}
+
+.question {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 1rem;
+  border: 1px solid #c7d2fe;
+  font-size: 1rem;
+  resize: none;
 }
 
 button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  font-size: 16px;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+#submitBtn {
+  background: #7c3aed;
+}
+
+#submitBtn:hover {
+  background: #5b21b6;
+}
+
+#clearBtn {
+  background: #ec4899;
+}
+
+#clearBtn:hover {
+  background: #be185d;
+}
+
+#result {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f3f4f6;
+  border-radius: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+  button {
+    width: 100%;
+    margin-right: 0;
+  }
 }
