@@ -1,7 +1,19 @@
-const submitBtn = document.getElementById("submitBtn");
+const submitBtn = document.getElementById("submitBtn"); 
 const clearBtn = document.getElementById("clearBtn");
 const resultDiv = document.getElementById("result");
 const questions = document.querySelectorAll(".question");
+
+// Музыка
+const bgMusic = document.getElementById("bgMusic");
+const volumeControl = document.getElementById("volumeControl");
+
+// Устанавливаем громкость по умолчанию 30%
+bgMusic.volume = 0.3;
+
+// Изменение громкости через ползунок
+volumeControl.addEventListener("input", () => {
+  bgMusic.volume = volumeControl.value;
+});
 
 // Загрузка сохранённых ответов
 questions.forEach(q => {
