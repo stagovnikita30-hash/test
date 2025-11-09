@@ -6,7 +6,7 @@ const questions = document.querySelectorAll(".question");
 // Музыка
 const bgMusic = document.getElementById("bgMusic");
 const volumeControl = document.getElementById("volumeControl");
-bgMusic.volume = 0.05; // по умолчанию 5%
+bgMusic.volume = 0.025; // 2.5%
 
 // Включаем музыку после первого клика пользователя
 document.addEventListener("click", () => {
@@ -79,3 +79,4 @@ submitBtn.addEventListener("click", async () => {
     submitBtn.innerText = "Анализировать";
   }
 });
+
