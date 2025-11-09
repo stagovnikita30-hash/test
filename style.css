@@ -1,7 +1,6 @@
-/* Основные стили */
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #c3ecf9, #e0b3ff, #ffb6c1);
+  background: linear-gradient(135deg, #c3ecf9, #e0b3ff, #ffb6c1); /* статичный градиент */
   padding: 2rem;
   margin: 0;
   display: flex;
@@ -27,6 +26,10 @@ h1 {
 
 .question {
   margin-bottom: 1.5rem;
+  background: #fefefe;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 label {
@@ -44,6 +47,13 @@ textarea {
   resize: none;
 }
 
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 button {
   padding: 0.8rem 1.5rem;
   border: none;
@@ -51,10 +61,8 @@ button {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  margin-right: 1rem;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
   color: #fff;
+  transition: background 0.3s ease;
 }
 
 #submitBtn {
@@ -86,8 +94,11 @@ button {
 
 /* Адаптивность */
 @media (max-width: 600px) {
+  .buttons {
+    flex-direction: column;
+  }
+
   button {
     width: 100%;
-    margin-right: 0;
   }
 }
