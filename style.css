@@ -1,53 +1,57 @@
-/* Базовые настройки */
+/* Фон с изображением Сталкера */
 body {
   margin: 0;
-  font-family: 'Poppins', Arial, sans-serif;
-  background: linear-gradient(135deg, #0d0d1a, #1a1a2e);
+  font-family: 'Arial', sans-serif;
+  background: url('stalker-background.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #eee;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 50px 15px;
-  transition: background 0.5s;
+  padding: 40px 15px;
+  position: relative;
 }
 
-/* Основной контейнер с эффектом glassmorphism */
-.container {
-  max-width: 720px;
+/* Темный overlay, чтобы текст был читаемым */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  background: rgba(30,30,50,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  height: 100%;
+  background: rgba(20, 20, 20, 0.7); /* темный слой поверх фона */
+  z-index: 0;
+}
+
+/* Основной контейнер */
+.container {
+  max-width: 700px;
+  width: 100%;
+  background: rgba(40, 40, 40, 0.85); /* полупрозрачный серый */
   padding: 30px 35px;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  transition: all 0.3s ease;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1; /* чтобы поверх overlay */
 }
 
 /* Заголовок */
 h1 {
   text-align: center;
-  color: #a28cff;
-  margin-bottom: 30px;
-  font-size: 32px;
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(162,140,255,0.5);
+  color: #f0f0f0;
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-/* Блок вопросов с легким hover эффектом */
+/* Блок вопросов */
 .question {
-  background: rgba(20,20,40,0.8);
-  padding: 18px 22px;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-
-.question:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(162,140,255,0.2);
+  background: rgba(60, 60, 60, 0.8);
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
 /* Метки вопросов */
@@ -55,29 +59,21 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #c3bfff;
+  color: #ddd;
   font-size: 15px;
 }
 
-/* Поля для ответов с subtle glass эффектом */
+/* Поля для ответов */
 textarea {
   width: 100%;
-  padding: 0.7rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(0,0,20,0.5);
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: rgba(30,30,30,0.8);
   color: #eee;
   font-size: 0.95rem;
   resize: vertical;
   min-height: 50px;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 2px 6px rgba(255,255,255,0.05);
-}
-
-textarea:focus {
-  border-color: #8c88ff;
-  box-shadow: 0 0 10px rgba(140,136,255,0.3);
-  outline: none;
 }
 
 /* Кнопки */
@@ -90,80 +86,33 @@ textarea:focus {
 
 button {
   flex: 1;
-  padding: 0.8rem 1.2rem;
+  padding: 0.7rem 1rem;
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   color: #fff;
-  transition: transform 0.2s, box-shadow 0.3s, background 0.4s;
-  position: relative;
-  overflow: hidden;
+  background: #666;
+  transition: transform 0.2s, box-shadow 0.3s;
 }
 
-/* Градиенты кнопок */
-#submitBtn {
-  background: linear-gradient(135deg, #6655ff, #8c88ff);
-}
-
-#clearBtn {
-  background: linear-gradient(135deg, #5555aa, #8888cc);
-}
-
-/* Hover эффект кнопок */
 button:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 20px rgba(140,136,255,0.5);
-}
-
-/* Плавное появление кнопок при наведении */
-button::after {
-  content: "";
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  top: -10%;
-  left: -10%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s;
-  border-radius: 50%;
-}
-
-button:hover::after {
-  opacity: 1;
+  transform: scale(1.03);
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
 }
 
 /* Результат анализа */
 #result {
   margin-top: 20px;
-  padding: 18px;
-  background: rgba(20,20,40,0.8);
-  border-radius: 14px;
+  padding: 16px;
+  background: rgba(50,50,50,0.8);
+  border-radius: 12px;
   max-height: 350px;
   overflow-y: auto;
   white-space: pre-wrap;
-  color: #ddd;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 2px 6px rgba(255,255,255,0.04);
-  scrollbar-width: thin;
-  scrollbar-color: #8c88ff rgba(20,20,40,0.8);
-}
-
-/* Кастомный скролл для вебкитов */
-#result::-webkit-scrollbar {
-  width: 6px;
-}
-
-#result::-webkit-scrollbar-thumb {
-  background: #8c88ff;
-  border-radius: 6px;
-}
-
-#result::-webkit-scrollbar-track {
-  background: rgba(20,20,40,0.8);
-  border-radius: 6px;
+  color: #eee;
+  border: 1px solid #444;
 }
 
 /* Адаптив */
