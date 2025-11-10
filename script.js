@@ -118,6 +118,5 @@ let currentBg = 0;
 function changeBackground() {
   currentBg = (currentBg + 1) % backgrounds.length;
   document.body.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
-  document.body.style.transition = 'background-image 2s ease-in-out';
 }
 setInterval(changeBackground, 60000); // смена каждая минута
