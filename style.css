@@ -79,7 +79,7 @@ body::before {
 /* Заголовок */
 h1 {
   font-family: 'StalkerFont';
-  color: #ffcc00;
+  color: #dddddd;
   font-size: 36px;
   text-align: center;
   text-shadow: 2px 2px 6px #000;
