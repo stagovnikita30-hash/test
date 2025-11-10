@@ -12,13 +12,13 @@ bgMusic.volume = 0.005;
 
 // Включаем музыку после первого взаимодействия
 document.addEventListener("click", () => {
-  if(bgMusic.paused) bgMusic.play();
+  if (bgMusic.paused) bgMusic.play();
 }, { once: true });
 
-// Ползунок 0–3% громкости
+// Управление громкостью с диапазоном 0 - 3%
 volumeControl.addEventListener("input", () => {
-  bgMusic.volume = volumeControl.value;
-  if(bgMusic.paused) bgMusic.play();
+  bgMusic.volume = parseFloat(volumeControl.value); // напрямую соответствует ползунку
+  if (bgMusic.paused) bgMusic.play();
 });
 
 // Восстановление сохранённых ответов
