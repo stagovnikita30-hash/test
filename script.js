@@ -7,17 +7,16 @@ const questions = document.querySelectorAll(".question");
 const bgMusic = document.getElementById("bgMusic");
 const volumeControl = document.getElementById("volumeControl");
 
-// Громкость по умолчанию 2.5%
-bgMusic.volume = 0.025;
+// Очень тихая музыка по умолчанию
+bgMusic.volume = 0.01;
 
-// Включаем музыку после первого взаимодействия
 document.addEventListener("click", () => {
   if (bgMusic.paused) bgMusic.play();
 }, { once: true });
 
-// Плавное изменение громкости (слабая чувствительность)
+// Ползунок с низкой чувствительностью
 volumeControl.addEventListener("input", () => {
-  bgMusic.volume = volumeControl.value / 10; // ← вот это и снижает громкость
+  bgMusic.volume = volumeControl.value / 10;
   if (bgMusic.paused) bgMusic.play();
 });
 
@@ -25,17 +24,17 @@ volumeControl.addEventListener("input", () => {
 questions.forEach(q => {
   const id = q.dataset.id;
   const saved = localStorage.getItem(`answer_${id}`);
-  if (saved) q.querySelector("textarea").value = saved;
+  if(saved) q.querySelector("textarea").value = saved;
 });
 
 // Сохранение ответов
-function saveAnswers() {
-  questions.forEach(q => {
+function saveAnswers(){
+  questions.forEach(q=>{
     const id = q.dataset.id;
     const answer = q.querySelector("textarea").value;
-    if (answer.trim()) {
+    if(answer.trim()){
       localStorage.setItem(`answer_${id}`, answer);
-    } else {
+    }else{
       localStorage.removeItem(`answer_${id}`);
     }
   });
@@ -45,7 +44,7 @@ function saveAnswers() {
 clearBtn.addEventListener("click", () => {
   questions.forEach(q => q.querySelector("textarea").value = "");
   Object.keys(localStorage).forEach(key => {
-    if (key.startsWith("answer_")) localStorage.removeItem(key);
+    if(key.startsWith("answer_")) localStorage.removeItem(key);
   });
   resultDiv.innerText = "";
 });
@@ -68,10 +67,9 @@ submitBtn.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ answer: combinedText })
     });
-
     const data = await res.json();
     resultDiv.innerText = data.analysis;
-  } catch (err) {
+  } catch(err) {
     resultDiv.innerText = "Ошибка при анализе.";
   } finally {
     submitBtn.disabled = false;
