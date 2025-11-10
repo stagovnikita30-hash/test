@@ -8,7 +8,7 @@
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background: url('stalker-background.jpg') no-repeat center center fixed;
+  background: url('stalker-bg1.jpg') no-repeat center center fixed;
   background-size: cover;
   color: #eee;
   display: flex;
@@ -16,6 +16,7 @@ body {
   min-height: 100vh;
   padding: 0 15px;
   overflow-x: hidden;
+  transition: background-image 2s ease-in-out;
 }
 
 /* Темный overlay */
