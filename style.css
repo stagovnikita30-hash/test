@@ -4,7 +4,7 @@
   src: url('fonts/amazs_t_a_l_k_e_r_v_3_0.ttf') format('truetype');
 }
 
-/* Фон */
+/* Базовый стиль body */
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
@@ -12,12 +12,10 @@ body {
   background-size: cover;
   color: #eee;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
   min-height: 100vh;
-  padding: 40px 15px;
-  position: relative;
-  overflow-x: hidden; /* Убираем горизонтальный скролл */
+  padding: 0 15px;
+  overflow-x: hidden;
 }
 
 /* Темный overlay */
@@ -60,7 +58,6 @@ body::before {
   gap: 10px;
   z-index: 3;
 }
-
 .music-control input[type="range"] {
   width: 100px;
 }
@@ -68,15 +65,14 @@ body::before {
 /* Основной контейнер */
 .container {
   max-width: 700px;
-  width: 90%;
+  width: 100%;
   background: rgba(40,40,40,0.95);
   padding: 30px 25px;
   border-radius: 16px;
   box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-  position: relative;
-  z-index: 2;
   margin: 20px auto;
-  box-sizing: border-box; /* учитываем padding в ширине */
+  z-index: 2;
+  flex-shrink: 0;
 }
 
 /* Заголовок */
@@ -97,20 +93,9 @@ h1 {
   margin-bottom: 16px;
 }
 
-/* Метки вопросов */
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #eee;
-  font-size: 15px;
-}
-
 /* Поле ответа */
 textarea {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box; /* padding и border не увеличивают ширину */
+  width: 95%;
   padding: 0.6rem;
   border-radius: 10px;
   border: 1px solid #888;
@@ -118,18 +103,12 @@ textarea {
   color: #eee;
   resize: vertical;
   min-height: 80px;
-  display: block;
   margin: auto;
+  display: block;
 }
 
 /* Кнопки */
-.buttons {
-  display: flex;
-  gap: 0.8rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-}
-
+.buttons { display: flex; gap: 0.8rem; margin-top: 1rem; }
 button {
   flex: 1;
   padding: 0.7rem 1rem;
@@ -139,15 +118,10 @@ button {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
 }
+button:hover { transform: scale(1.03); }
 
-button:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 12px rgba(107,33,168,0.4);
-}
-
-/* Результат анализа */
+/* Результат */
 #result {
   margin-top: 20px;
   padding: 16px;
@@ -163,20 +137,15 @@ button:hover {
   text-align: center;
   padding: 20px;
   border-top: 1px solid rgba(255,255,255,0.2);
-  margin-top: 25px;
   border-radius: 6px;
   z-index: 3;
-  position: relative;
+  margin-top: auto;
 }
-
 .footer a {
   color: #ffcc00;
   text-decoration: none;
 }
-
-.footer a:hover {
-  text-decoration: underline;
-}
+.footer a:hover { text-decoration: underline; }
 
 /* Адаптив */
 @media (max-width: 600px) {
