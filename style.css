@@ -49,9 +49,9 @@ body::before {
 
 /* Музыка */
 .music-control {
-  position: fixed;
-  top: 15px;
-  right: 15px;
+  position: fixed; /* закрепляем в окне */
+  top: 15px;       /* отступ сверху */
+  right: 15px;     /* отступ справа */
   background: rgba(50,50,50,0.8);
   padding: 10px 15px;
   border-radius: 12px;
@@ -60,8 +60,10 @@ body::before {
   gap: 10px;
   z-index: 3;
 }
+
 .music-control input[type="range"] {
-  width: 100px;
+  width: 100px; /* длина ползунка */
+  cursor: pointer;
 }
 
 /* Основной контейнер */
