@@ -24,7 +24,7 @@ let musicIndex = 0;
 
 // Первый трек
 bgMusic.src = musicList[musicIndex];
-bgMusic.volume = 0.005; // 0.5%
+bgMusic.volume = 0.005;
 
 // Включаем музыку после первого клика
 document.addEventListener("click", () => {
@@ -102,7 +102,7 @@ submitBtn.addEventListener("click", async () => {
   }
 });
 
-// Слайдшоу фонов (10 фото)
+// Плавное слайдшоу фонов
 const backgrounds = [
   'stalker-bg1.jpg',
   'stalker-bg2.jpg',
@@ -118,19 +118,40 @@ const backgrounds = [
 
 let currentBg = 0;
 
-// Поставим первый фон сразу
-document.body.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
-document.body.style.transition = 'background-image 2s ease-in-out';
+// Создаём два слоя для плавного перехода
+const bgLayer1 = document.createElement('div');
+const bgLayer2 = document.createElement('div');
 
-// Функция смены фона с плавным переходом
+[bgLayer1, bgLayer2].forEach(layer => {
+  layer.style.position = 'fixed';
+  layer.style.top = 0;
+  layer.style.left = 0;
+  layer.style.width = '100%';
+  layer.style.height = '100%';
+  layer.style.backgroundSize = 'cover';
+  layer.style.backgroundPosition = 'center';
+  layer.style.transition = 'opacity 2s ease-in-out';
+  layer.style.zIndex = -1;
+  document.body.appendChild(layer);
+});
+
+bgLayer1.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
+bgLayer1.style.opacity = 1;
+bgLayer2.style.opacity = 0;
+
+let showingLayer1 = true;
+
 function changeBackground() {
   currentBg = (currentBg + 1) % backgrounds.length;
-  const newBg = new Image();
-  newBg.src = backgrounds[currentBg];
-  newBg.onload = () => {
-    document.body.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
-  };
+  const nextLayer = showingLayer1 ? bgLayer2 : bgLayer1;
+  nextLayer.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
+  nextLayer.style.opacity = 1;
+
+  const prevLayer = showingLayer1 ? bgLayer1 : bgLayer2;
+  prevLayer.style.opacity = 0;
+
+  showingLayer1 = !showingLayer1;
 }
 
-// Меняем каждые 60 секунд
+// Смена каждые 60 секунд
 setInterval(changeBackground, 60000);
