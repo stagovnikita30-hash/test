@@ -10,25 +10,25 @@ const volumeControl = document.getElementById("volumeControl");
 // Громкость по умолчанию 2.5%
 bgMusic.volume = 0.025;
 
-// Включаем музыку после первого клика
+// Включаем музыку после первого взаимодействия
 document.addEventListener("click", () => {
   if (bgMusic.paused) bgMusic.play();
 }, { once: true });
 
-// Изменение громкости с низкой чувствительностью
+// Плавное изменение громкости (слабая чувствительность)
 volumeControl.addEventListener("input", () => {
-  bgMusic.volume = volumeControl.value / 10;
+  bgMusic.volume = volumeControl.value / 10; // ← вот это и снижает громкость
   if (bgMusic.paused) bgMusic.play();
 });
 
-// Загрузка сохранённых ответов
+// Восстановление сохранённых ответов
 questions.forEach(q => {
   const id = q.dataset.id;
   const saved = localStorage.getItem(`answer_${id}`);
   if (saved) q.querySelector("textarea").value = saved;
 });
 
-// Сохраняем все ответы
+// Сохранение ответов
 function saveAnswers() {
   questions.forEach(q => {
     const id = q.dataset.id;
@@ -50,7 +50,7 @@ clearBtn.addEventListener("click", () => {
   resultDiv.innerText = "";
 });
 
-// Отправка на анализ
+// Анализ
 submitBtn.addEventListener("click", async () => {
   submitBtn.disabled = true;
   submitBtn.innerText = "Анализируем...";
@@ -59,9 +59,7 @@ submitBtn.addEventListener("click", async () => {
 
   let combinedText = "";
   questions.forEach(q => {
-    const label = q.querySelector("label").innerText;
-    const answer = q.querySelector("textarea").value || "не отвечено";
-    combinedText += `${label}\nОтвет: ${answer}\n\n`;
+    combinedText += `${q.querySelector("label").innerText}\nОтвет: ${q.querySelector("textarea").value || "не отвечено"}\n\n`;
   });
 
   try {
@@ -74,7 +72,6 @@ submitBtn.addEventListener("click", async () => {
     const data = await res.json();
     resultDiv.innerText = data.analysis;
   } catch (err) {
-    console.error(err);
     resultDiv.innerText = "Ошибка при анализе.";
   } finally {
     submitBtn.disabled = false;
