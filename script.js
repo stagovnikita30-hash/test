@@ -1,13 +1,10 @@
-// script.js — полный файл с поддержкой docx-генерации научного отчёта
-
-// --- DOM элементы
+// -------------------- DOM элементы --------------------
 const submitBtn = document.getElementById("submitBtn");
 const clearBtn = document.getElementById("clearBtn");
-const downloadBtnElement = document.getElementById("downloadBtn"); // кнопка в markup (если есть)
 const resultDiv = document.getElementById("result");
 const questions = document.querySelectorAll(".question");
 
-// --- МУЗЫКА
+// -------------------- МУЗЫКА --------------------
 const bgMusic = document.getElementById("bgMusic");
 const volumeControl = document.getElementById("volumeControl");
 
@@ -20,7 +17,7 @@ let musicIndex = 0;
 
 bgMusic.loop = false;
 bgMusic.src = musicList[musicIndex];
-bgMusic.volume = 0.005; // 0.5%
+bgMusic.volume = 0.005;
 
 document.addEventListener("click", () => {
   if (bgMusic.paused) bgMusic.play();
@@ -34,12 +31,11 @@ bgMusic.addEventListener('ended', () => {
 });
 
 volumeControl.addEventListener("input", () => {
-  // ожидается значение 0..0.01 (пример), просто используем напрямую
   bgMusic.volume = parseFloat(volumeControl.value) || 0;
   if (bgMusic.paused) bgMusic.play();
 });
 
-// --- ВОССТАНОВЛЕНИЕ И СОХРАНЕНИЕ ОТВЕТОВ
+// -------------------- СОХРАНЕНИЕ И ВОССТАНОВЛЕНИЕ --------------------
 questions.forEach(q => {
   const id = q.dataset.id;
   const saved = localStorage.getItem(`answer_${id}`);
@@ -55,14 +51,13 @@ function saveAnswers() {
   });
 }
 
-// Очистка
 clearBtn.addEventListener("click", () => {
   questions.forEach(q => q.querySelector("textarea").value = "");
   Object.keys(localStorage).forEach(key => { if (key.startsWith("answer_")) localStorage.removeItem(key); });
   resultDiv.innerText = "";
 });
 
-// --- АНАЛИЗ (POST /api/analyze.js)
+// -------------------- АНАЛИЗ --------------------
 submitBtn.addEventListener("click", async () => {
   submitBtn.disabled = true;
   submitBtn.innerText = "Анализируем...";
@@ -81,7 +76,6 @@ submitBtn.addEventListener("click", async () => {
     });
 
     const data = await res.json();
-    // API теперь возвращает уже "чистый" текст (без markdown), поэтому просто ставим в контейнер
     resultDiv.innerText = data.analysis || "Пустой ответ от сервера.";
   } catch (err) {
     console.error(err);
@@ -92,7 +86,7 @@ submitBtn.addEventListener("click", async () => {
   }
 });
 
-// --- СЛАЙДШОУ ФОНА (плавно)
+// -------------------- СЛАЙДШОУ ФОНА --------------------
 const backgrounds = [
   'stalker-bg1.jpg','stalker-bg2.jpg','stalker-bg3.jpg','stalker-bg4.jpg','stalker-bg5.jpg',
   'stalker-bg6.jpg','stalker-bg7.jpg','stalker-bg8.jpg','stalker-bg9.jpg','stalker-bg10.jpg'
@@ -104,17 +98,9 @@ const bgLayer1 = document.createElement('div');
 const bgLayer2 = document.createElement('div');
 [bgLayer1, bgLayer2].forEach(layer => {
   Object.assign(layer.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100%',
-    height: '100%',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    transition: 'opacity 2s ease-in-out',
-    zIndex: '-2',
-    opacity: '0',
-    pointerEvents: 'none'
+    position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+    backgroundSize: 'cover', backgroundPosition: 'center',
+    transition: 'opacity 2s ease-in-out', zIndex: '-2', opacity: '0', pointerEvents: 'none'
   });
   document.body.appendChild(layer);
 });
@@ -130,23 +116,15 @@ function changeBackground() {
   bottomLayer.style.opacity = '0';
   currentBg = nextBg;
 }
-setInterval(changeBackground, 60000); // 60s
+setInterval(changeBackground, 60000);
 
-// ------------------ DOCX: Научный отчёт (ПСИХОПРОФИЛЬ) ------------------
-// Параметры титула и контактов — использованы те, что ты дал
+// -------------------- DOCX: НАУЧНЫЙ ОТЧЁТ --------------------
 const REPORT_TITLE = "ПСИХОПРОФИЛЬ";
 const PROJECT_NAME = "ПСИХОПРОФИЛЬ";
 const CONTACTS_LINE = "Контакты для связи: p.s.i.h.o_t.e.s.t@bk.ru";
 const COPYRIGHT_LINE = "© P.S.I.H.O.T.E.S.T, 2025";
 
-// Для использования docx: добавь в index.html
-// <script src="https://cdn.jsdelivr.net/npm/docx@7.3.0/build/index.js"></script>
-// библиотека будет доступна как window.docx
-
 function parseSectionsFromAnalysis(text) {
-  // ожидаем, что API вернул текст с заголовками, например:
-  // "Личностный профиль\n... \nЭмоциональная стабильность\n..."
-  // Разбиваем по заголовкам — ищем известные названия разделов
   const headings = [
     "Личностный профиль",
     "Эмоциональная стабильность",
@@ -159,68 +137,23 @@ function parseSectionsFromAnalysis(text) {
     "Заключение",
     "Данные отсутствуют"
   ];
-
-  // Инициализация
   const sections = {};
   headings.forEach(h => sections[h] = "");
 
-  // Простейший парсер: найдем индекс каждого заголовка в тексте
-  // Если нет заголовков — положим весь текст в "Личностный профиль"
-  const txt = text || "";
-  let foundAny = false;
-
-  // Build positions
-  const positions = [];
-  headings.forEach(h => {
-    const re = new RegExp("^\\s*" + h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "im"); // whole line search
-    const lines = txt.split(/\r?\n/);
-    for (let i = 0; i < lines.length; i++) {
-      if (re.test(lines[i])) {
-        positions.push({ heading: h, index: i });
-        foundAny = true;
-        break;
-      }
-    }
+  const lines = text.split(/\r?\n/);
+  let currentHeading = "Личностный профиль";
+  lines.forEach(line => {
+    const trim = line.trim();
+    if (headings.includes(trim)) currentHeading = trim;
+    else if (trim.length) sections[currentHeading] += trim + "\n";
   });
-
-  if (!foundAny) {
-    // нет явных заголовков — ставим весь текст в Личностный профиль
-    sections["Личностный профиль"] = txt.trim();
-    return sections;
-  }
-
-  // если есть — разделим по линиям и assign
-  const lines = txt.split(/\r?\n/);
-  // find all heading occurrences with positions (may be not in order)
-  const occ = [];
-  headings.forEach(h => {
-    const re = new RegExp("^\\s*" + h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*$", "im");
-    lines.forEach((ln, idx) => { if (re.test(ln)) occ.push({ heading: h, idx }); });
-  });
-  // sort by index
-  occ.sort((a,b) => a.idx - b.idx);
-  // append an artificial end
-  occ.push({ heading: null, idx: lines.length });
-
-  for (let k = 0; k < occ.length-1; k++) {
-    const head = occ[k].heading;
-    const start = occ[k].idx + 1;
-    const end = occ[k+1].idx;
-    const slice = lines.slice(start, end).join("\n").trim();
-    if (head && headings.includes(head)) sections[head] = slice;
-  }
-
   return sections;
 }
 
-// Функция создания docx и скачивания
 async function createAndDownloadReportDOCX(analysisText) {
-  if (!window.docx) {
-    alert("Библиотека docx не найдена. Добавь <script src=\"https://cdn.jsdelivr.net/npm/docx@7.3.0/build/index.js\"></script> в head.");
-    return;
-  }
+  if (!window.docx) { alert("Добавь библиотеку docx в head."); return; }
 
-  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Table, TableRow, TableCell, WidthType, BorderStyle } = window.docx;
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Table, TableRow, TableCell, WidthType, Footer } = window.docx;
 
   const doc = new Document({
     styles: {
@@ -231,13 +164,11 @@ async function createAndDownloadReportDOCX(analysisText) {
     }
   });
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString("ru-RU");
+  const dateStr = new Date().toLocaleDateString("ru-RU");
 
-  // Титульный лист
+  // --- Титульный лист ---
   doc.addSection({
     properties: {},
-    headers: {},
     children: [
       new Paragraph({ children: [ new TextRun({ text: PROJECT_NAME, bold: true, size: 48 }) ], alignment: AlignmentType.CENTER }),
       new Paragraph({ text: "", spacing: { after: 200 } }),
@@ -249,15 +180,13 @@ async function createAndDownloadReportDOCX(analysisText) {
       new Paragraph({ text: "", spacing: { after: 400 } }),
       new Paragraph({ children: [ new TextRun({ text: COPYRIGHT_LINE, size: 14 }) ], alignment: AlignmentType.CENTER }),
       new Paragraph({ text: "", spacing: { after: 400 } }),
-      // page break
-      new Paragraph({ children: [] })
+      new Paragraph({ children: [] }) // page break
     ]
   });
 
-  // Parse sections from analysis text
   const sections = parseSectionsFromAnalysis(analysisText);
 
-  // Summary table: краткое содержание (первый 180 символов)
+  // --- Таблица краткого содержания ---
   const tableRows = [];
   tableRows.push(new TableRow({
     children: [
@@ -289,36 +218,26 @@ async function createAndDownloadReportDOCX(analysisText) {
     }));
   });
 
-  // Добавим секцию с таблицей и отдельными разделами
   const sectionChildren = [];
-
   sectionChildren.push(new Paragraph({ text: "Краткое содержание по разделам", heading: HeadingLevel.HEADING_2 }));
-  const summaryTable = new Table({
-    rows: tableRows,
-    width: { size: 100, type: WidthType.PERCENTAGE }
-  });
-  sectionChildren.push(summaryTable);
+  sectionChildren.push(new Table({ rows: tableRows, width: { size: 100, type: WidthType.PERCENTAGE } }));
   sectionChildren.push(new Paragraph({ text: "", spacing: { after: 200 } }));
 
-  // Добавляем детальные разделы: заголовок + параграфы
+  // --- Детальные разделы ---
   order.forEach(key => {
     const body = (sections[key] || "").trim();
     if (!body) return;
     sectionChildren.push(new Paragraph({ text: key, heading: HeadingLevel.HEADING_2 }));
-    // split into paragraphs by double newlines
     const paras = body.split(/\n{1,}/).map(p => p.trim()).filter(p => p.length > 0);
-    paras.forEach(p => {
-      // иногда в тексте встречаются списки "1." — оставляем
-      sectionChildren.push(new Paragraph({ children: [ new TextRun({ text: p, size: 24 }) ] }));
-    });
+    paras.forEach(p => sectionChildren.push(new Paragraph({ children: [ new TextRun({ text: p, size: 24 }) ] })));
     sectionChildren.push(new Paragraph({ text: "", spacing: { after: 200 } }));
   });
 
-  // Footer with contacts on all following pages
+  // --- Footer с контактами ---
   doc.addSection({
     properties: {},
     footers: {
-      default: new window.docx.Footer({
+      default: new Footer({
         children: [
           new Paragraph({ children: [ new TextRun({ text: CONTACTS_LINE, size: 18 }) ], alignment: AlignmentType.CENTER }),
           new Paragraph({ children: [ new TextRun({ text: COPYRIGHT_LINE, size: 18 }) ], alignment: AlignmentType.CENTER })
@@ -328,7 +247,7 @@ async function createAndDownloadReportDOCX(analysisText) {
     children: sectionChildren
   });
 
-  // Pack and download
+  // --- Скачивание ---
   const blob = await Packer.toBlob(doc);
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -341,7 +260,7 @@ async function createAndDownloadReportDOCX(analysisText) {
   URL.revokeObjectURL(url);
 }
 
-// Добавим кнопку "Скачать научный отчёт" в интерфейс
+// -------------------- Кнопка Скачать --------------------
 const officialDownloadBtn = document.createElement("button");
 officialDownloadBtn.innerText = "Скачать официальный отчёт (.docx)";
 officialDownloadBtn.style.background = "#2b3b4d";
@@ -355,14 +274,12 @@ officialDownloadBtn.addEventListener("mouseover", () => officialDownloadBtn.styl
 officialDownloadBtn.addEventListener("mouseout", () => officialDownloadBtn.style.transform = "scale(1)");
 document.querySelector(".buttons").appendChild(officialDownloadBtn);
 
-// По клику генерируем docx на основе текста в resultDiv
 officialDownloadBtn.addEventListener("click", async () => {
   const text = resultDiv.innerText || "";
   if (!text || text.trim().length < 5) {
     alert("Сначала получите результат анализа (нажмите «Анализировать»).");
     return;
   }
-  // Создаём и скачиваем
   try {
     await createAndDownloadReportDOCX(text);
   } catch (err) {
